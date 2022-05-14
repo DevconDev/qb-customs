@@ -88,7 +88,7 @@ Config.Locations = {
         drawtextui = {
             text = "Bennys Motorworks"
         },
-        restrictions = { deniedClasses = { 18 } },
+        restrictions = { deniedClasses = { 0 } },
         zones = {
             { coords = vector3(-212.55, -1320.56, 31.0), length = 6.0, width = 4.0, heading = 270.0, minZ = 29.88, maxZ = 33.48 },
             { coords = vector3(-222.47, -1329.73, 31.0), length = 6.0, width = 4.0, heading = 270.0, minZ = 29.88, maxZ = 33.48 },
@@ -128,7 +128,7 @@ Config.Locations = {
         drawtextui = {
             text = "Bennys Motorworks"
         },
-        restrictions = { deniedClasses = { 18 } },
+        restrictions = { deniedClasses = { 0 } },
         zones = {
             { coords = vector3(-32.48, -1065.38, 28.4), length = 6.0, width = 4.0, heading = 340.0, minZ = 27.0, maxZ = 31.0 },
             { coords = vector3(-38.12, -1052.85, 28.4), length = 6.0, width = 4.0, heading = 340.0, minZ = 27.0, maxZ = 31.0 },
@@ -391,4 +391,38 @@ Config.Locations = {
             { coords = vector3(340.38, -570.8, 28.8), length = 8.8, width = 4.2, heading = 340.0, minZ = 27.5, maxZ = 31.5 },
         }
     },
+    ['Luxury'] = {
+        settings = {
+            label = 'Luxury Motorworks',
+            welcomeLabel = "Welcome to Luxury Motorworks!",
+            enabled = true,
+        },
+        blip = {
+            label = 'Luxury Motorworks',
+            coords = vector3(-1242.91, -344.66, 36.76),
+            sprite = 72,
+            scale = 0.65,
+            color = 0,
+            display = 4,
+            enabled = true,
+        },
+        categories = {
+            repair = true,
+            respray = true,
+            liveries = true,
+            extras = true,
+            
+        },
+        drawtextui = {
+            text = "Luxury Motorworks"
+        },
+        restrictions = { deniedClasses = { 0 } },
+        job = { 'cardealer' },
+        zones = {
+            { coords = vector3(-1242.91, -344.66, 36.76), length = 6.0, width = 4.0, heading = 25.0, minZ = 35.56, maxZ = 39.56 },
+            
+        }
+    },
+   
+
 }
