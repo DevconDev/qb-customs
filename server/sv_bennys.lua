@@ -10,21 +10,32 @@ local RepairCosts = {}
 
 local function IsVehicleOwned(plate)
     local retval = false
-    local result = MySQL.scalar.await('SELECT plate FROM player_vehicles WHERE plate = ?', {plate})
+    local result = MySQL.scalar.await('SELECT plate FROM player_vehicles WHERE plate = ?', { plate })
     if result then retval = true end
     return retval
 end
 
 -----------------------
-----   Threads     ----
+----   Callbacks   ----
 -----------------------
+
+QBCore.Functions.CreateCallback('qb-customs:server:getOnDutyMechanics', function(_, cb)
+    local currentMechanics = 0
+    local players = QBCore.Functions.GetQBPlayers()
+    for i = 1, #players do
+        if players[i].PlayerData.job.name == 'mechanic' and players[i].PlayerData.job.onduty then
+            currentMechanics += 1
+        end
+    end
+    cb(currentMechanics)
+end)
 
 -----------------------
 ---- Server Events ----
 -----------------------
 
 AddEventHandler("playerDropped", function()
-	local source = source
+    local source = source
     RepairCosts[source] = nil
 end)
 
@@ -41,7 +52,7 @@ RegisterNetEvent('qb-customs:server:attemptPurchase', function(type, upgradeLeve
         if balance >= repairCost then
             Player.Functions.RemoveMoney(moneyType, repairCost, "bennys")
             TriggerClientEvent('qb-customs:client:purchaseSuccessful', source)
-	exports['qb-management']:AddMoney("mechanic", repairCost)
+            exports['qb-management']:AddMoney("mechanic", repairCost)
         else
             TriggerClientEvent('qb-customs:client:purchaseFailed', source)
         end
@@ -49,7 +60,7 @@ RegisterNetEvent('qb-customs:server:attemptPurchase', function(type, upgradeLeve
         if balance >= vehicleCustomisationPrices[type].prices[upgradeLevel] then
             TriggerClientEvent('qb-customs:client:purchaseSuccessful', source)
             Player.Functions.RemoveMoney(moneyType, vehicleCustomisationPrices[type].prices[upgradeLevel], "bennys")
-	exports['qb-management']:AddMoney("mechanic", vehicleCustomisationPrices[type].prices[upgradeLevel]) 
+            exports['qb-management']:AddMoney("mechanic", vehicleCustomisationPrices[type].prices[upgradeLevel])
         else
             TriggerClientEvent('qb-customs:client:purchaseFailed', source)
         end
@@ -57,7 +68,7 @@ RegisterNetEvent('qb-customs:server:attemptPurchase', function(type, upgradeLeve
         if balance >= vehicleCustomisationPrices[type].price then
             TriggerClientEvent('qb-customs:client:purchaseSuccessful', source)
             Player.Functions.RemoveMoney(moneyType, vehicleCustomisationPrices[type].price, "bennys")
-	exports['qb-management']:AddMoney("mechanic", vehicleCustomisationPrices[type].price) 
+            exports['qb-management']:AddMoney("mechanic", vehicleCustomisationPrices[type].price)
         else
             TriggerClientEvent('qb-customs:client:purchaseFailed', source)
         end
@@ -71,7 +82,7 @@ end)
 
 RegisterNetEvent("qb-customs:server:updateVehicle", function(myCar)
     if IsVehicleOwned(myCar.plate) then
-        MySQL.update('UPDATE player_vehicles SET mods = ? WHERE plate = ?', {json.encode(myCar), myCar.plate})
+        MySQL.update('UPDATE player_vehicles SET mods = ? WHERE plate = ?', { json.encode(myCar), myCar.plate })
     end
 end)
 
@@ -83,6 +94,6 @@ RegisterNetEvent('qb-customs:server:UpdateLocation', function(location, type, ke
     TriggerClientEvent('qb-customs:client:UpdateLocation', -1, location, type, key, value)
 end)
 
-QBCore.Functions.CreateCallback('qb-customs:server:GetLocations', function(source, cb)
-	cb(Config.Locations)
+QBCore.Functions.CreateCallback('qb-customs:server:GetLocations', function(_, cb)
+    cb(Config.Locations)
 end)

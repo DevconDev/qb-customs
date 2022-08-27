@@ -59,25 +59,25 @@ end
 
 local function AllowJob(restrictionData, job)
     if type(restrictionData.job) == "table" then
-        for _,restrictedJob in ipairs(restrictionData.job) do
+        for _, restrictedJob in ipairs(restrictionData.job) do
             if restrictedJob == job then return true end
         end
     else
         if restrictionData.job == "any" or restrictionData.job == job or not restrictionData.job then return true end
     end
-    if Config.Debug then print('Denied for not having allowed job. ('..job..')') end
+    if Config.Debug then print('Denied for not having allowed job. (' .. job .. ')') end
     return false
 end
 
 local function AllowGang(restrictionData, gang)
     if type(restrictionData.gang) == "table" then
-        for _,restrictedGang in ipairs(restrictionData.gang) do
+        for _, restrictedGang in ipairs(restrictionData.gang) do
             if restrictedGang == gang then return true end
         end
     else
         if restrictionData.gang == "any" or restrictionData.gang == gang or not restrictionData.gang then return true end
     end
-    if Config.Debug then print('Denied for not having allowed gang. ('..gang..')') end
+    if Config.Debug then print('Denied for not having allowed gang. (' .. gang .. ')') end
     return false
 end
 
@@ -85,23 +85,23 @@ local function AllowVehicleClass(restrictionData, vehicle)
     local vehicleClass = GetVehicleClass(vehicle)
 
     if restrictionData.deniedClasses then
-        for _,class in ipairs(restrictionData.deniedClasses) do
+        for _, class in ipairs(restrictionData.deniedClasses) do
             if vehicleClass == class then
-                if Config.Debug then print('Denied for having denied vehicle class. ('..vehicleClass..')') end
+                if Config.Debug then print('Denied for having denied vehicle class. (' .. vehicleClass .. ')') end
                 return false
             end
         end
     end
 
     if restrictionData.allowedClasses then
-        for _,class in ipairs(restrictionData.allowedClasses) do
+        for _, class in ipairs(restrictionData.allowedClasses) do
             if vehicleClass == class then return true end
         end
     end
 
 
     if (restrictionData.allowedClasses and restrictionData.allowedClasses[1] == nil) or not restrictionData.allowedClasses or vehicleClass == 0 then return true end
-    if Config.Debug then print('Denied for not having allowed vehicle class. ('..vehicleClass..')') end
+    if Config.Debug then print('Denied for not having allowed vehicle class. (' .. vehicleClass .. ')') end
     return false
 end
 
@@ -132,11 +132,11 @@ function RepairVehicle()
     local getFuel = GetVehicleFuelLevel(plyVeh)
 
     SetVehicleFixed(plyVeh)
-	SetVehicleDirtLevel(plyVeh, 0.0)
+    SetVehicleDirtLevel(plyVeh, 0.0)
     SetVehiclePetrolTankHealth(plyVeh, 4000.0)
     SetVehicleFuelLevel(plyVeh, getFuel)
 
-    for i = 0,5 do SetVehicleTyreFixed(plyVeh, i) end
+    for i = 0, 5 do SetVehicleTyreFixed(plyVeh, i) end
 end
 
 function GetCurrentMod(id)
@@ -580,9 +580,8 @@ function ApplyMod(categoryID, modID)
     local plyVeh = GetVehiclePedIsIn(plyPed, false)
 
     if categoryID == 18 then
-        ToggleVehicleMod(plyVeh, categoryID, modID+1)
-        originalTurboState = modID+1
-    elseif categoryID == 11 or categoryID == 12 or categoryID== 13 or categoryID == 15 or categoryID == 16 then --Performance Upgrades
+        ToggleVehicleMod(plyVeh, categoryID, modID + 1)
+    elseif categoryID == 11 or categoryID == 12 or categoryID == 13 or categoryID == 15 or categoryID == 16 then --Performance Upgrades
         originalCategory = categoryID
         originalMod = modID
 
@@ -601,10 +600,10 @@ function ApplyExtra(extraID)
     local isEnabled = IsVehicleExtraTurnedOn(plyVeh, extraID)
     if isEnabled == 1 then
         SetVehicleExtra(plyVeh, tonumber(extraID), 1)
-        SetVehiclePetrolTankHealth(plyVeh,4000.0)
+        SetVehiclePetrolTankHealth(plyVeh, 4000.0)
     else
         SetVehicleExtra(plyVeh, tonumber(extraID), 0)
-        SetVehiclePetrolTankHealth(plyVeh,4000.0)
+        SetVehiclePetrolTankHealth(plyVeh, 4000.0)
     end
 end
 
@@ -762,7 +761,6 @@ function ExitBennys()
     isPlyInBennys = false
 end
 
-
 function EnterLocation(override)
     local locationData = Config.Locations[CustomsData.location]
     local categories = (override and override.categories) or {
@@ -785,7 +783,7 @@ function EnterLocation(override)
     local canEnter = false
     local repairOnly = true
     if next(CustomsData) then
-        for k,v in pairs(locationData.categories) do
+        for k, v in pairs(locationData.categories) do
             if not canEnter and v then
                 if k ~= "repair" then repairOnly = false end
                 canEnter = true
@@ -798,8 +796,8 @@ function EnterLocation(override)
         print('***************************************************************************')
         print(string.format('EnterLocation Debug Start | CanEnter: %s | Repair Only: %s | Override: %s', canEnter, repairOnly, json.encode(override)))
         print('***************************************************************************')
-        if next(locationData) then for k,v in pairs(locationData) do print(k, json.encode(v)) end end
-        for k,v in pairs(categories) do print(k,v) end
+        if next(locationData) then for k, v in pairs(locationData) do print(k, json.encode(v)) end end
+        for k, v in pairs(categories) do print(k, v) end
         print('***************************************************************************')
         print('EnterLocation Debug End')
         print('***************************************************************************')
@@ -851,7 +849,6 @@ function EnterLocation(override)
     isPlyInBennys = true
     DisableControls(repairOnly)
 end
-
 
 function DisableControls(repairOnly)
     CreateThread(function()
@@ -946,23 +943,30 @@ function CheckRestrictions(location)
 end
 
 function SetupInteraction()
-    local text = CustomsData.drawtextui
-    if Config.UseRadial then
-        if not radialMenuItemId then
-            radialMenuItemId = exports['qb-radialmenu']:AddOption({
-                id = 'customs',
-                title = 'Enter Customs',
-                icon = 'wrench',
-                type = 'client',
-                event = 'qb-customs:client:EnterCustoms',
-                shouldClose = true
-            })
+    QBCore.Functions.TriggerCallback('qb-customs:server:getOnDutyMechanics', function(result)
+        local text = CustomsData.drawtextui
+        local currentMechanics = result
+        if PlayerData.job.name ~= 'mechanic' and Config.DisableWhenMechanicsOnline and currentMechanics >= Config.MinOnlineMechanics then
+            text = text .. ' is currently unavailable. Please find a mechanic.'
+        else
+            if Config.UseRadial then
+                if not radialMenuItemId then
+                    radialMenuItemId = exports['qb-radialmenu']:AddOption({
+                        id = 'customs',
+                        title = 'Enter Customs',
+                        icon = 'wrench',
+                        type = 'client',
+                        event = 'qb-customs:client:EnterCustoms',
+                        shouldClose = true
+                    })
+                end
+            else
+                text = '[E] ' .. text
+                CheckForKeypress()
+            end
         end
-    else
-        text = '[E] '..text
-        CheckForKeypress()
-    end
-    exports['qb-core']:DrawText(text, 'left')
+        exports['qb-core']:DrawText(text, 'left')
+    end)
 end
 
 exports('GetCustomsData', function() if next(CustomsData) ~= nil then return CustomsData else return nil end end)
@@ -976,7 +980,7 @@ CreateThread(function()
     for location, data in pairs(Config.Locations) do
         -- PolyZone + Drawtext + Locations Management
         for i, spot in ipairs(data.zones) do
-            local _name = location.."-customs-"..i
+            local _name = location .. "-customs-" .. i
             local newSpot = BoxZone:Create(spot.coords, spot.length, spot.width, {
                 name = _name,
                 -- debugPoly = true,
