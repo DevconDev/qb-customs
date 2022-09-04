@@ -423,6 +423,46 @@ Config.Locations = {
             
         }
     },
+    ['devcong'] = {
+        settings = {
+            label = 'Devcons Garage',
+            welcomeLabel = "Welcome to Devcons Garage!",
+            enabled = true,
+        },
+        blip = {
+            label = 'Devcons Garage',
+            coords = vector3(-1242.91, -344.66, 36.76),
+            sprite = 72,
+            scale = 0.65,
+            color = 0,
+            display = 4,
+            enabled = true,
+        },
+        categories = {
+           mods = true,
+            turbo = true,
+            repair = true,
+            respray = true,
+            liveries = true,
+            wheels = true,
+            tint = true,
+            plate = true,
+            extras = true,
+            neons = true,
+            xenons = true,
+            horn = true,
+            cosmetics = true,
+            
+        },
+        drawtextui = {
+            text = "Devcon's Garage"
+        },
+        restrictions = { deniedClasses = { 0 } },
+        zones = {
+            { coords = vector3(-1532.63, 82.31, 56.52), length = 6.0, width = 4.0, heading = 315.6, minZ = 55.32, maxZ = 59.32 },
+            
+        }
+    },
    
 
 }
